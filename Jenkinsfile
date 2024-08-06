@@ -3,6 +3,9 @@ pipeline {
     tools {
         maven 'maven'
     }
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
         stage('Build') { 
             steps {
@@ -19,6 +22,11 @@ pipeline {
                 always {
                     junit skipPublishingChecks: true, stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Deliver') {
+            steps {
+                sh ./jenkins/scripts/deliver.sh
             }
         }
     }
